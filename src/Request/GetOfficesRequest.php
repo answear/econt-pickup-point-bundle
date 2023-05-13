@@ -10,12 +10,12 @@ class GetOfficesRequest extends Request
     private const HTTP_METHOD = 'POST';
 
     private ?string $countryCode;
-    private ?int $cityId;
+    private ?int $cityID;
 
     public function __construct(?string $countryCode = null, ?int $cityId = null)
     {
         $this->countryCode = $countryCode;
-        $this->cityId = $cityId;
+        $this->cityID = $cityId;
     }
 
     public function getEndpoint(): string
