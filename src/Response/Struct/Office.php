@@ -39,13 +39,11 @@ readonly class Office
         public string $hubName,
         public string $hubNameEn,
     ) {
-        if ($isAPS) {
-            $this->officeType = OfficeType::Aps;
-        } elseif ($isMPS) {
-            $this->officeType = OfficeType::Mps;
-        } else {
-            $this->officeType = OfficeType::Office;
-        }
+        $this->officeType = match (true) {
+            $isAPS => OfficeType::Aps,
+            $isMPS => OfficeType::Mps,
+            default => OfficeType::Office,
+        };
     }
 
     public static function fromArray(array $officeData): self

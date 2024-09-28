@@ -11,7 +11,7 @@ class GetOfficesRequest extends Request
 
     public function __construct(
         private ?string $countryCode = null,
-        private ?int $cityId = null,
+        private ?int $cityID = null,
     ) {
     }
 

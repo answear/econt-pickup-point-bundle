@@ -31,7 +31,7 @@ class SerializerTest extends TestCase
     {
         yield 'requestFields' => [
             new GetOfficesRequest('GR', 1),
-            '{"countryCode":"GR","cityId":1}',
+            '{"countryCode":"GR","cityID":1}',
         ];
 
         yield 'skipNullValues' => [
