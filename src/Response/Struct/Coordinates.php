@@ -6,18 +6,14 @@ namespace Answear\EcontBundle\Response\Struct;
 
 use Webmozart\Assert\Assert;
 
-class Coordinates
+readonly class Coordinates
 {
-    public float $latitude;
-    public float $longitude;
-
-    public function __construct(float $latitude, float $longitude)
-    {
+    public function __construct(
+        public float $latitude,
+        public float $longitude,
+    ) {
         Assert::range($latitude, -90, 90);
         Assert::range($longitude, -180, 180);
-
-        $this->latitude = $latitude;
-        $this->longitude = $longitude;
     }
 
     public static function fromArray(array $coordsData): ?self
@@ -29,7 +25,7 @@ class Coordinates
             Assert::float($coordsData['longitude']);
 
             return new self($coordsData['latitude'], $coordsData['longitude']);
-        } catch (\InvalidArgumentException $exception) {
+        } catch (\InvalidArgumentException) {
             return null;
         }
     }

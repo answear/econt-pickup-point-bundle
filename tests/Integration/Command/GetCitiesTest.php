@@ -13,6 +13,7 @@ use Answear\EcontBundle\Request\GetCitiesRequest;
 use Answear\EcontBundle\Response\GetCitiesResponse;
 use Answear\EcontBundle\Tests\MockGuzzleTrait;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class GetCitiesTest extends TestCase
@@ -28,9 +29,7 @@ class GetCitiesTest extends TestCase
         $this->client = new Client(new ConfigProvider('test', 'Qwerty123!'), $this->setupGuzzleClient());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successfulGetCities(): void
     {
         $command = $this->getCommand();
@@ -58,13 +57,13 @@ class GetCitiesTest extends TestCase
         $this->assertSame($city->name, 'LUXEMBOURG');
         $this->assertSame($city->nameEn, 'LUXEMBOURG');
         $this->assertSame($city->phoneCode, '0');
-        $this->assertSame($city->expressDeliveries, false);
+        $this->assertFalse($city->expressDeliveries);
         $this->assertNull($city->coordinates);
     }
 
     private function getCommand(): GetCities
     {
-        $transformer = new RequestTransformer(new Serializer(), new ConfigProvider('test', 'Qwerty123!'));
+        $transformer = new RequestTransformer(new Serializer());
 
         return new GetCities($this->client, $transformer);
     }

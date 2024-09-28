@@ -10,11 +10,9 @@ use Webmozart\Assert\Assert;
 
 class GetCitiesResponse
 {
-    public CityCollection $cities;
-
-    public function __construct(CityCollection $cities)
-    {
-        $this->cities = $cities;
+    public function __construct(
+        public CityCollection $cities,
+    ) {
     }
 
     public function getCities(): CityCollection
@@ -29,7 +27,7 @@ class GetCitiesResponse
         return new self(
             new CityCollection(
                 array_map(
-                    fn ($cityData) => City::fromArray($cityData),
+                    static fn($cityData) => City::fromArray($cityData),
                     $arrayResponse['cities']
                 )
             )

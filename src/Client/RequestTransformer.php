@@ -9,24 +9,18 @@ use Answear\EcontBundle\Request\Request;
 use GuzzleHttp\Psr7\Request as HttpRequest;
 use GuzzleHttp\Psr7\Uri;
 
-class RequestTransformer
+readonly class RequestTransformer
 {
-    private Serializer $serializer;
-    private ConfigProvider $configuration;
-
     public function __construct(
-        Serializer $serializer,
-        ConfigProvider $configuration
+        private Serializer $serializer,
     ) {
-        $this->serializer = $serializer;
-        $this->configuration = $configuration;
     }
 
     public function transform(Request $request): HttpRequest
     {
         return new HttpRequest(
             $request->getMethod(),
-            new Uri($this->configuration->getServiceURI() . $request->getEndpoint()),
+            new Uri(ConfigProvider::SERVICE_URI . $request->getEndpoint()),
             [
                 'Content-type' => 'application/json',
             ],

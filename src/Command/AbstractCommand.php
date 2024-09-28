@@ -9,7 +9,7 @@ use Answear\EcontBundle\Response\ErrorResponse;
 use Psr\Http\Message\ResponseInterface;
 use Webmozart\Assert\Assert;
 
-abstract class AbstractCommand
+abstract readonly class AbstractCommand
 {
     protected function getBody(ResponseInterface $response): array
     {

@@ -6,18 +6,21 @@ namespace Answear\EcontBundle\Response\Struct;
 
 use Webmozart\Assert\Assert;
 
-class City
+readonly class City
 {
-    public int $id;
-    public Country $country;
-    public string $postalCode;
-    public string $name;
-    public string $nameEn;
-    public ?string $regionName;
-    public ?string $regionNameEn;
-    public ?string $phoneCode;
-    public ?Coordinates $coordinates;
-    public ?bool $expressDeliveries;
+    public function __construct(
+        public int $id,
+        public Country $country,
+        public string $postalCode,
+        public string $name,
+        public string $nameEn,
+        public ?string $regionName,
+        public ?string $regionNameEn,
+        public ?string $phoneCode,
+        public ?Coordinates $coordinates,
+        public ?bool $expressDeliveries,
+    ) {
+    }
 
     public static function fromArray(array $cityData): self
     {
@@ -32,18 +35,17 @@ class City
         Assert::keyExists($cityData, 'phoneCode');
         Assert::keyExists($cityData, 'expressCityDeliveries');
 
-        $city = new self();
-        $city->id = $cityData['id'];
-        $city->country = Country::fromArray($cityData['country']);
-        $city->postalCode = $cityData['postCode'];
-        $city->name = $cityData['name'];
-        $city->nameEn = $cityData['nameEn'];
-        $city->regionName = $cityData['regionName'];
-        $city->regionNameEn = $cityData['regionNameEn'];
-        $city->phoneCode = $cityData['phoneCode'];
-        $city->expressDeliveries = $cityData['expressCityDeliveries'];
-        $city->coordinates = Coordinates::fromArray($cityData['location'] ?? []);
-
-        return $city;
+        return new self(
+            $cityData['id'],
+            Country::fromArray($cityData['country']),
+            $cityData['postCode'],
+            $cityData['name'],
+            $cityData['nameEn'],
+            $cityData['regionName'],
+            $cityData['regionNameEn'],
+            $cityData['phoneCode'],
+            Coordinates::fromArray($cityData['location'] ?? []),
+            $cityData['expressCityDeliveries']
+        );
     }
 }

@@ -4,24 +4,20 @@ declare(strict_types=1);
 
 namespace Answear\EcontBundle\Response;
 
-use RuntimeException;
 use Webmozart\Assert\Assert;
 
-class ErrorResponse
+readonly class ErrorResponse
 {
-    public string $message;
-    public string $type;
-    /** @var string[] */
-    public array $fields;
-    /** @var ErrorResponse[]|null */
-    public ?array $innerErrors;
-
-    public function __construct(string $message, string $type, array $fields, ?array $innerErrors)
-    {
-        $this->message = $message;
-        $this->type = $type;
-        $this->fields = $fields;
-        $this->innerErrors = $innerErrors;
+    /**
+     * @param string[] $fields
+     * @param ErrorResponse[]|null $innerErrors
+     */
+    public function __construct(
+        public string $message,
+        public string $type,
+        public array $fields,
+        public ?array $innerErrors,
+    ) {
     }
 
     public static function isErrorResponse(array $response): bool
@@ -32,7 +28,7 @@ class ErrorResponse
     public static function fromArray(array $response): self
     {
         if (!self::isErrorResponse($response)) {
-            throw new RuntimeException('Cannot create ErrorResponse');
+            throw new \RuntimeException('Cannot create ErrorResponse');
         }
 
         $response = $response['error'];

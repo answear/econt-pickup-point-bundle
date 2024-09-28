@@ -10,11 +10,9 @@ use Webmozart\Assert\Assert;
 
 class GetOfficesResponse
 {
-    public OfficeCollection $offices;
-
-    public function __construct(OfficeCollection $offices)
-    {
-        $this->offices = $offices;
+    public function __construct(
+        public OfficeCollection $offices,
+    ) {
     }
 
     public function getOffices(): OfficeCollection
@@ -29,7 +27,7 @@ class GetOfficesResponse
         return new self(
             new OfficeCollection(
                 array_map(
-                    fn ($officeData) => Office::fromArray($officeData),
+                    fn($officeData) => Office::fromArray($officeData),
                     $arrayResponse['offices']
                 )
             )

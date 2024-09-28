@@ -9,19 +9,13 @@ use Answear\EcontBundle\Response\ErrorResponse;
 class MalformedResponseException extends \RuntimeException
 {
     /**
-     * @var ErrorResponse|mixed
+     * @param ErrorResponse|mixed $response
      */
-    private $response;
-
-    public function __construct(string $message, $response, ?\Throwable $previous = null)
+    public function __construct(
+        string $message,
+        public $response,
+        ?\Throwable $previous = null)
     {
         parent::__construct($message, 0, $previous);
-
-        $this->response = $response;
-    }
-
-    public function getResponse()
-    {
-        return $this->response;
     }
 }

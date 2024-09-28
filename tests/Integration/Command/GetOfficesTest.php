@@ -15,6 +15,7 @@ use Answear\EcontBundle\Response\GetOfficesResponse;
 use Answear\EcontBundle\Response\Struct\OpeningHours;
 use Answear\EcontBundle\Tests\MockGuzzleTrait;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class GetOfficesTest extends TestCase
@@ -30,9 +31,7 @@ class GetOfficesTest extends TestCase
         $this->client = new Client(new ConfigProvider('test', 'Qwerty123!'), $this->setupGuzzleClient());
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function successfulGetOffices(): void
     {
         $command = $this->getCommand();
@@ -44,9 +43,7 @@ class GetOfficesTest extends TestCase
         $this->assertOffice($response);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function getOfficeWithEmptyCoordinates(): void
     {
         $command = $this->getCommand();
@@ -60,9 +57,7 @@ class GetOfficesTest extends TestCase
         $this->assertNull($office->address->coordinates);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function responseWithError(): void
     {
         $this->expectException(MalformedResponseException::class);
@@ -84,13 +79,13 @@ class GetOfficesTest extends TestCase
         $this->assertNotNull($office);
         $this->assertSame($office->id, 33701);
         $this->assertSame($office->code, '15774');
-        $this->assertSame($office->isMPS, false);
-        $this->assertSame($office->isAPS, false);
+        $this->assertFalse($office->isMPS);
+        $this->assertFalse($office->isAPS);
         $this->assertSame($office->name, 'ACS AFTHIMERON ATTIKIS');
         $this->assertSame($office->nameEn, 'ACS AFTHIMERON ATTIKIS');
         $this->assertSame($office->phones, ['2107714680']);
         $this->assertSame($office->emails, ['shops@acscourier.gr']);
-        $this->assertSame($office->address->id, null);
+        $this->assertNull($office->address->id);
         $this->assertSame($office->address->city->id, 55978);
         $this->assertSame($office->address->city->country->id, 1084);
         $this->assertSame($office->address->city->country->code2, 'GR');
@@ -101,8 +96,8 @@ class GetOfficesTest extends TestCase
         $this->assertSame($office->address->city->postalCode, '10431');
         $this->assertSame($office->address->city->name, 'Αθήνα');
         $this->assertSame($office->address->city->nameEn, 'ATHINA');
-        $this->assertSame($office->address->city->phoneCode, null);
-        $this->assertSame($office->address->city->expressDeliveries, null);
+        $this->assertNull($office->address->city->phoneCode);
+        $this->assertNull($office->address->city->expressDeliveries);
         $this->assertSame($office->address->fullAddress, ' Αθήνα Bairaktari 15');
         $this->assertSame($office->address->num, '');
         $this->assertSame($office->address->other, 'Bairaktari 15');
@@ -121,7 +116,7 @@ class GetOfficesTest extends TestCase
 
     private function getCommand(): GetOffices
     {
-        $transformer = new RequestTransformer(new Serializer(), new ConfigProvider('test', 'Qwerty123!'));
+        $transformer = new RequestTransformer(new Serializer());
 
         return new GetOffices($this->client, $transformer);
     }
@@ -146,7 +141,8 @@ class GetOfficesTest extends TestCase
                     'fields' => ['unknown'],
                     'innerErrors' => null,
                 ],
-            ]
+            ],
+            JSON_THROW_ON_ERROR
         );
     }
 }
