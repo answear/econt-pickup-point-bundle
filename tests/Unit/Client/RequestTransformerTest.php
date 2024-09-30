@@ -9,27 +9,24 @@ use Answear\EcontBundle\Client\Serializer;
 use Answear\EcontBundle\ConfigProvider;
 use Answear\EcontBundle\Request\GetOfficesRequest;
 use Answear\EcontBundle\Request\Request;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class RequestTransformerTest extends TestCase
 {
     private RequestTransformer $transformer;
-    /**
-     * @var Serializer|\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $serializer;
+    private Serializer|MockObject $serializer;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $this->serializer = $this->createMock(Serializer::class);
-        $this->transformer = new RequestTransformer($this->serializer, new ConfigProvider('test', 'Qwerty123!'));
+        $this->transformer = new RequestTransformer($this->serializer);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function requestTransformed(): void
     {
         $request = new GetOfficesRequest();
@@ -48,6 +45,6 @@ class RequestTransformerTest extends TestCase
 
     private function expectedPath(Request $request): string
     {
-        return (new ConfigProvider('test', 'Qwerty123!'))->getServiceURI() . $request->getEndpoint();
+        return ConfigProvider::SERVICE_URI . $request->getEndpoint();
     }
 }

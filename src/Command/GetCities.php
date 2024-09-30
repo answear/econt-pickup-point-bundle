@@ -9,15 +9,12 @@ use Answear\EcontBundle\Client\RequestTransformer;
 use Answear\EcontBundle\Request\GetCitiesRequest;
 use Answear\EcontBundle\Response\GetCitiesResponse;
 
-class GetCities extends AbstractCommand
+readonly class GetCities extends AbstractCommand
 {
-    private Client $client;
-    private RequestTransformer $transformer;
-
-    public function __construct(Client $client, RequestTransformer $transformer)
+    public function __construct(
+        private Client $client,
+        private RequestTransformer $transformer)
     {
-        $this->client = $client;
-        $this->transformer = $transformer;
     }
 
     public function getCities(GetCitiesRequest $request): GetCitiesResponse

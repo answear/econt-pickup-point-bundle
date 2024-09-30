@@ -9,13 +9,10 @@ class GetOfficesRequest extends Request
     private const ENDPOINT = 'NomenclaturesService.getOffices.json';
     private const HTTP_METHOD = 'POST';
 
-    private ?string $countryCode;
-    private ?int $cityID;
-
-    public function __construct(?string $countryCode = null, ?int $cityId = null)
-    {
-        $this->countryCode = $countryCode;
-        $this->cityID = $cityId;
+    public function __construct(
+        private ?string $countryCode = null,
+        private ?int $cityID = null,
+    ) {
     }
 
     public function getEndpoint(): string

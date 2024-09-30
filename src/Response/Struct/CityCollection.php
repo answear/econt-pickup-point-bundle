@@ -4,31 +4,22 @@ declare(strict_types=1);
 
 namespace Answear\EcontBundle\Response\Struct;
 
-use ArrayIterator;
-use Countable;
-use IteratorAggregate;
 use Webmozart\Assert\Assert;
 
-class CityCollection implements Countable, IteratorAggregate
+readonly class CityCollection implements \Countable, \IteratorAggregate
 {
-    /**
-     * @var City[]
-     */
-    private array $cities;
-
-    public function __construct(array $cities)
-    {
+    public function __construct(
+        private array $cities,
+    ) {
         Assert::allIsInstanceOf($cities, City::class);
-
-        $this->cities = $cities;
     }
 
     /**
-     * @return City[]|ArrayIterator
+     * @return \ArrayIterator<City>
      */
-    public function getIterator(): ArrayIterator
+    public function getIterator(): \ArrayIterator
     {
-        return new ArrayIterator($this->cities);
+        return new \ArrayIterator($this->cities);
     }
 
     public function count(): int

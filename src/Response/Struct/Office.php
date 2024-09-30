@@ -8,32 +8,43 @@ use Answear\EcontBundle\Enum\OfficeType;
 use Answear\EcontBundle\Enum\ShipmentType;
 use Webmozart\Assert\Assert;
 
-class Office
+readonly class Office
 {
-    public int $id;
-    public string $code;
-    public bool $isMPS;
-    public bool $isAPS;
-    public string $name;
-    public string $nameEn;
-    /** @var string[] */
-    public array $phones;
-    /** @var string[] */
-    public array $emails;
-    public OfficeAddress $address;
-    public string $info;
-    public string $currency;
-    public ?string $language;
-    public ?OpeningHours $openingHours = null;
-    public ?OpeningHours $halfDayOpeningHours = null;
-    /** @var ShipmentType[] */
-    public array $shipmentTypes;
-    public bool $cardPaymentAllowed = true;
-    public string $partnerCode;
-    public string $hubCode;
-    public string $hubName;
-    public string $hubNameEn;
     public OfficeType $officeType;
+
+    /**
+     * @param string[] $phones
+     * @param string[] $emails
+     * @param ShipmentType[] $shipmentTypes
+     */
+    public function __construct(
+        public int $id,
+        public string $code,
+        public bool $isMPS,
+        public bool $isAPS,
+        public string $name,
+        public string $nameEn,
+        public array $phones,
+        public array $emails,
+        public OfficeAddress $address,
+        public string $info,
+        public string $currency,
+        public ?string $language,
+        public ?OpeningHours $openingHours,
+        public ?OpeningHours $halfDayOpeningHours,
+        public array $shipmentTypes,
+        public bool $cardPaymentAllowed,
+        public string $partnerCode,
+        public string $hubCode,
+        public string $hubName,
+        public string $hubNameEn,
+    ) {
+        $this->officeType = match (true) {
+            $isAPS => OfficeType::Aps,
+            $isMPS => OfficeType::Mps,
+            default => OfficeType::Office,
+        };
+    }
 
     public static function fromArray(array $officeData): self
     {
@@ -57,49 +68,68 @@ class Office
         Assert::stringNotEmpty($officeData['hubName']);
         Assert::stringNotEmpty($officeData['hubNameEn']);
 
-        $office = new self();
-        $office->id = $officeData['id'];
-        $office->code = $officeData['code'];
-        $office->isMPS = $officeData['isMPS'];
-        $office->isAPS = $officeData['isAPS'];
-        $office->name = $officeData['name'];
-        $office->nameEn = $officeData['nameEn'];
-        $office->phones = $officeData['phones'];
-        $office->emails = $officeData['emails'];
-        $office->address = OfficeAddress::fromArray($officeData['address']);
-        $office->info = $officeData['info'];
-        $office->currency = $officeData['currency'];
-        $office->language = $officeData['language'];
+        return new self(
+            $officeData['id'],
+            $officeData['code'],
+            $officeData['isMPS'],
+            $officeData['isAPS'],
+            $officeData['name'],
+            $officeData['nameEn'],
+            $officeData['phones'],
+            $officeData['emails'],
+            OfficeAddress::fromArray($officeData['address']),
+            $officeData['info'],
+            $officeData['currency'],
+            $officeData['language'],
+            self::guessOpeningHours($officeData),
+            self::guessHalfDayOpeningHours($officeData),
+            self::guessShipmentTypes($officeData),
+            true,
+            $officeData['partnerCode'],
+            $officeData['hubCode'],
+            $officeData['hubName'],
+            $officeData['hubNameEn'],
+        );
+    }
+
+    private static function guessOpeningHours(array $officeData): ?OpeningHours
+    {
         if (null !== $officeData['normalBusinessHoursFrom'] && null !== $officeData['normalBusinessHoursTo']) {
-            $office->openingHours = new OpeningHours(
+            return new OpeningHours(
                 $officeData['normalBusinessHoursFrom'],
                 $officeData['normalBusinessHoursTo']
             );
         }
+
+        return null;
+    }
+
+    private static function guessHalfDayOpeningHours(array $officeData): ?OpeningHours
+    {
         if (null !== $officeData['halfDayBusinessHoursFrom'] && null !== $officeData['halfDayBusinessHoursTo']) {
-            $office->halfDayOpeningHours = new OpeningHours(
+            return new OpeningHours(
                 $officeData['halfDayBusinessHoursFrom'],
                 $officeData['halfDayBusinessHoursTo']
             );
         }
-        $office->shipmentTypes = array_map(
-            function (string $type) {
+
+        return null;
+    }
+
+    /**
+     * @return ShipmentType[] array
+     */
+    private static function guessShipmentTypes(array $officeData): array
+    {
+        return array_map(
+            static function (string $type) {
                 try {
-                    return ShipmentType::get($type);
-                } catch (\InvalidArgumentException $exception) {
+                    return ShipmentType::from($type);
+                } catch (\ValueError) {
                     // NOP, do not fail hard for new services
                 }
             },
             $officeData['shipmentTypes']
         );
-        $office->partnerCode = $officeData['partnerCode'];
-        $office->hubCode = $officeData['hubCode'];
-        $office->hubName = $officeData['hubName'];
-        $office->hubNameEn = $officeData['hubNameEn'];
-        $office->officeType = $office->isAPS
-            ? OfficeType::aps()
-            : ($office->isMPS ? OfficeType::mps() : OfficeType::office());
-
-        return $office;
     }
 }
