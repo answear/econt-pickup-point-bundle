@@ -16,12 +16,12 @@ class Client
 {
     private const CONNECTION_TIMEOUT = 10;
     private const TIMEOUT = 30;
-    
+
     private ClientInterface $client;
 
     public function __construct(
         ConfigProvider $configuration,
-        ?ClientInterface $client = null
+        ?ClientInterface $client = null,
     ) {
         $this->client = $client ?? new GuzzleClient($configuration->getRequestHeaders() + ['timeout' => self::TIMEOUT, 'connect_timeout' => self::CONNECTION_TIMEOUT]);
     }
