@@ -7,6 +7,3 @@ parameters:
     treatPhpDocTypesAsCertain: false
     paths:
         - %rootDir%/../../../src
-    ignoreErrors:
-        - message: '#.*NodeDefinition::children.*#'
-          path: ./src/DependencyInjection

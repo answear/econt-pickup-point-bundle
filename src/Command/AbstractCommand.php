@@ -16,7 +16,7 @@ abstract readonly class AbstractCommand
 {
     public function __construct(
         protected Client $client,
-        protected RequestTransformer $transformer
+        protected RequestTransformer $transformer,
     ) {
     }
 
