@@ -6,8 +6,8 @@ namespace Answear\EcontBundle;
 
 readonly class ConfigProvider
 {
-    public const URL = 'http://ee.econt.com/';
-    public const SERVICE_URI = '/services/Nomenclatures/';
+    public const string URL = 'https://ee.econt.com/';
+    public const string SERVICE_URI = '/services/Nomenclatures/';
 
     public function __construct(
         public string $user,

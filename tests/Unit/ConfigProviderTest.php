@@ -15,11 +15,11 @@ class ConfigProviderTest extends TestCase
     {
         $configuration = new ConfigProvider('test', 'Qwerty123!');
 
-        $this->assertSame('http://ee.econt.com/', ConfigProvider::URL);
+        $this->assertSame('https://ee.econt.com/', ConfigProvider::URL);
         $this->assertSame('/services/Nomenclatures/', ConfigProvider::SERVICE_URI);
         $this->assertSame(
             [
-                'base_uri' => 'http://ee.econt.com/',
+                'base_uri' => 'https://ee.econt.com/',
                 'auth' => [$configuration->user, $configuration->password],
             ],
             $configuration->getRequestHeaders()
